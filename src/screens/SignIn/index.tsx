@@ -1,16 +1,11 @@
-import React, { useState } from "react";
-import { Text, View, Image, StatusBar } from "react-native";
+import React from "react";
+import { Text, View, Image } from "react-native";
 import IllustrationImg from "../../assets/illustration.png";
 import { styles } from "./style";
 import { ButtonIcon } from "../../components/ButtonIcon";
 export function SigIn() {
     return (
         <View style={styles.container}>
-            <StatusBar
-                backgroundColor="transparent"
-                barStyle={"light-content"}
-                translucent
-            />
             <Image
                 source={IllustrationImg}
                 style={styles.image}
@@ -19,9 +14,9 @@ export function SigIn() {
 
             <View style={styles.content}>
                 <Text style={styles.title}>
-                    Organize {"\n"}
-                    suas jogatinas{"\n"}
-                    facilmente
+                    Conecte-se {"\n"}
+                    e organize suas{"\n"}
+                    jogatinas
                 </Text>
 
                 <Text style={styles.subtitle}>

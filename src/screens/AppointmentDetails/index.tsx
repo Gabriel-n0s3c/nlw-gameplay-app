@@ -13,14 +13,10 @@ import { Member } from "../../components/Member";
 import { ListDivider } from "../../components/ListDivider";
 import { ButtonIcon } from "../../components/ButtonIcon";
 
-export type Props = {
-  title: string;
-  subtitle: string;
-};
-export function AppointmentDetails({
-  title = "Lendários",
-  subtitle = "É hoje que vamos chegar ao challanger sem perder uma partida da md10",
-}: Props) {
+export function AppointmentDetails() {
+  const title = "Lendários";
+  const subtitle =
+    "É hoje que vamos chegar ao challanger sem perder uma partida da md10";
   const members = [
     {
       id: "1",

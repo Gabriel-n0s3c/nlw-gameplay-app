@@ -15,23 +15,5 @@ export function ListHeader({ title, subtitle }: Props) {
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.subtitle}>{subtitle}</Text>
     </View>
-
-    // <ScrollView
-    //   showsHorizontalScrollIndicator={false}
-    //   contentContainerStyle={{
-    //     paddingRight: 40,
-    //   }}
-    //   style={styles.container}
-    // >
-    //   {categories.map((category) => (
-    //     <Category
-    //       key={category.id}
-    //       icon={category.icon}
-    //       title={category.title}
-    //       checked={category.id+'' == categorySelected}
-    //       onPress={() => setCategory(category.id+'')}
-    //     />
-    //   ))}
-    // </ScrollView>
   );
 }

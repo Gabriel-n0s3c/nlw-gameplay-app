@@ -3,10 +3,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Home } from "../screens/Home";
 import { SignIn } from "../screens/SignIn";
 import { theme } from "../global/styles/theme";
+import { AppointmentDetails } from "../screens/AppointmentDetails";
 
  export type RootStackParamList = {
   Home: undefined;
   SignIn: undefined;
+  AppointmentDetails: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -21,6 +23,7 @@ export function AuthRoutes() {
     }}>
       <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="AppointmentDetails" component={AppointmentDetails} />
     </Stack.Navigator>
   );
 }

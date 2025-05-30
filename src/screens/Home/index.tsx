@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, Image, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import IllustrationImg from "../../assets/illustration.png";
 import { styles } from "./style";
 import { Profile } from "../../components/Profile";
@@ -8,6 +8,7 @@ import { CategorySelect } from "../../components/CategorySelect";
 import { ListHeader } from "../../components/ListHeader";
 import { Appointment } from "../../components/Appointment";
 import { ListDivider } from "../../components/ListDivider";
+import { Background } from "../../components/Background";
 
 export function Home() {
   const [category, setCategory] = useState("");
@@ -47,7 +48,7 @@ export function Home() {
 
   const url = IllustrationImg;
   return (
-    <View>
+    <Background>
       <View style={styles.header}>
         <Profile></Profile>
         <ButtonAdd />
@@ -67,6 +68,6 @@ export function Home() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <Appointment data={item} />}
       />
-    </View>
+    </Background>
   );
 }

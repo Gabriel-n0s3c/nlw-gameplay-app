@@ -11,11 +11,6 @@ export const styles = StyleSheet.create({
         marginTop: getStatusBarHeight() + 26,
         marginBottom: 42
     },
-
-    content:{
-        marginTop:42,
-
-    },
     title:{
         color:theme.colors.heading,
         textAlign: "center",
@@ -34,6 +29,6 @@ export const styles = StyleSheet.create({
     },
     matches:{
         marginTop:24,
-        marginLeft:24
+        marginLeft:24,
     }
 })

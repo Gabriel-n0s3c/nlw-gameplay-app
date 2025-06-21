@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Text, View, Image } from "react-native";
 import IllustrationImg from "../../assets/illustration.png";
 import { styles } from "./style";
@@ -7,11 +7,16 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes/auth.routes";
 import { Background } from "../../components/Background";
+import { AuthContext, useAuth } from "../../hooks/Auth";
+
 
 export function SignIn() {
   type SignInScreenProp = StackNavigationProp<RootStackParamList, "Home">;
 
   const navigation = useNavigation<SignInScreenProp>();
+  const {user} = useAuth();
+  console.log(user);
+  
 
   function handleSignIn() {
     navigation.navigate("Home");

@@ -13,7 +13,6 @@ import { theme } from "../../global/styles/theme";
 export function SignIn() {
   type SignInScreenProp = StackNavigationProp<RootStackParamList, "Home">;
 
-  const navigation = useNavigation<SignInScreenProp>();
   const { loading, signIn } = useAuth();
 
   async function handleSignIn() {

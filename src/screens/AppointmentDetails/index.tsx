@@ -1,7 +1,7 @@
-import React from "react";
-import { ImageBackground, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, ImageBackground, Text, View } from "react-native";
 import { styles } from "./style";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Background } from "../../components/Background";
 import { Header } from "../../components/Header";
 import { BorderlessButton, FlatList } from "react-native-gesture-handler";
@@ -9,33 +9,56 @@ import { Fontisto } from "@expo/vector-icons";
 import { theme } from "../../global/styles/theme";
 import BannerImg from "../../assets/banner.png";
 import { ListHeader } from "../../components/ListHeader";
-import { Member } from "../../components/Member";
+import { Member, MemberProps } from "../../components/Member";
 import { ListDivider } from "../../components/ListDivider";
 import { ButtonIcon } from "../../components/ButtonIcon";
+import { AppointmentProps } from "../../components/Appointment";
+import { api } from "../../services/api";
+import { GuildProps } from "../../components/Guild";
+import { Load } from "../../components/Load";
 
+type Params = {
+  appointmentSelected: AppointmentProps;
+};
+
+type GuildWidget = {
+  id: string;
+  name: string;
+  instant_invite: string;
+  members: MemberProps[];
+  presence_count: number;
+};
 export function AppointmentDetails() {
-  const title = "Lendários";
-  const subtitle =
-    "É hoje que vamos chegar ao challanger sem perder uma partida da md10";
-  const members = [
-    {
-      id: "1",
-      username: "Gabriel",
-      avatar_url: "https://github.com/gabriel-n0s3c.png",
-      status: "online",
-    },
-    {
-      id: "2",
-      username: "Gabriel",
-      avatar_url: "https://github.com/gabriel-n0s3c.png",
-      status: "offline",
-    },
-  ];
+  const [widget, setWidget] = useState<GuildWidget>({} as GuildWidget);
+  const [loading, setLoading] = useState(true);
+
+  const route = useRoute();
+
+  const { appointmentSelected } = route.params as Params;
+
   const navigation = useNavigation<any>();
+
+  async function fetchGuildWidget() {
+    try {
+      const response = await api.get(
+        `/guilds/${appointmentSelected.guild.id}/widget.json`
+      );
+
+      setWidget(response.data);
+    } catch (error) {
+      Alert.alert("Verifique se o Widget do serivdor está habilitado");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   function handleShare() {
     navigation.navigate("Home");
   }
+
+  useEffect(() => {
+    fetchGuildWidget();
+  }, []);
 
   return (
     <Background>
@@ -50,24 +73,30 @@ export function AppointmentDetails() {
 
       <ImageBackground source={BannerImg} style={styles.banner}>
         <View style={styles.bannerContent}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{subtitle}</Text>
+          <Text style={styles.title}>{appointmentSelected.guild.name}</Text>
+          <Text style={styles.subtitle}>{appointmentSelected.description}</Text>
         </View>
       </ImageBackground>
 
-      <ListHeader title="Jogadores" subtitle="Total 3"></ListHeader>
+      {loading ? (
+        <Load />
+      ) : (
+        <>
+          <ListHeader title="Jogadores" subtitle={`Total ${widget.presence_count}`}></ListHeader>
 
-      <FlatList
-        style={styles.members}
-        data={members}
-        keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={() => <ListDivider isCentered />}
-        renderItem={({ item }) => <Member data={item} />}
-      ></FlatList>
+          <FlatList
+            style={styles.members}
+            data={widget.members}
+            keyExtractor={(item) => item.id}
+            ItemSeparatorComponent={() => <ListDivider isCentered />}
+            renderItem={({ item }) => <Member data={item} />}
+          ></FlatList>
 
-      <View style={styles.footer}>
-        <ButtonIcon title="Entrar na partida" />
-      </View>
+          <View style={styles.footer}>
+            <ButtonIcon title="Entrar na partida" />
+          </View>
+        </>
+      )}
     </Background>
   );
 }

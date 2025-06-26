@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, ImageBackground, Text, View } from "react-native";
+import { Alert, ImageBackground, Share, Text, View, Platform } from "react-native";
 import { styles } from "./style";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Background } from "../../components/Background";
@@ -16,6 +16,7 @@ import { AppointmentProps } from "../../components/Appointment";
 import { api } from "../../services/api";
 import { GuildProps } from "../../components/Guild";
 import { Load } from "../../components/Load";
+import { openURL } from "expo-linking";
 
 type Params = {
   appointmentSelected: AppointmentProps;
@@ -52,8 +53,21 @@ export function AppointmentDetails() {
     }
   }
 
-  function handleShare() {
-    navigation.navigate("Home");
+  function handleShareInvitation() {
+
+    const message = Platform.OS === 'ios' ? 
+    `Junte-se a ${appointmentSelected.guild.name}` : widget.instant_invite;
+
+    Share.share({
+      message, 
+      url: widget.instant_invite
+    })
+  }
+
+  function handleOpenGuild() {
+
+    openURL(widget.instant_invite);
+
   }
 
   useEffect(() => {
@@ -65,7 +79,9 @@ export function AppointmentDetails() {
       <Header
         title="Detalhes"
         action={
-          <BorderlessButton>
+          appointmentSelected.guild.owner &&
+          <BorderlessButton
+            onPress={handleShareInvitation}>
             <Fontisto name="share" size={24} color={theme.colors.primary} />
           </BorderlessButton>
         }
@@ -82,7 +98,7 @@ export function AppointmentDetails() {
         <Load />
       ) : (
         <>
-          <ListHeader title="Jogadores" subtitle={`Total ${widget.presence_count}`}></ListHeader>
+          <ListHeader title="Jogadores" subtitle={`Total ${widget.presence_count ?? 0}`}></ListHeader>
 
           <FlatList
             style={styles.members}
@@ -92,9 +108,12 @@ export function AppointmentDetails() {
             renderItem={({ item }) => <Member data={item} />}
           ></FlatList>
 
+         { 
+          
+          appointmentSelected.guild.owner &&
           <View style={styles.footer}>
-            <ButtonIcon title="Entrar na partida" />
-          </View>
+            <ButtonIcon title="Entrar na partida" onPress={handleOpenGuild}/>
+          </View>}
         </>
       )}
     </Background>

@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from '../configs';
-
+const { CLIENT_ID } = process.env;
+const { REDIRECT_URI } = process.env;
+const { CLIENT_SECRET } = process.env;
 
 const api = axios.create({
   baseURL: 'https://discord.com/api'
@@ -29,4 +30,4 @@ async function exchangeCodeForToken(code: string, codeVerifier: string) {
   }
 }
 
-export { api , exchangeCodeForToken}
+export { api, exchangeCodeForToken }

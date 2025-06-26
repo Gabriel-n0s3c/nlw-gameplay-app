@@ -5,7 +5,7 @@ import { styles } from "./style";
 import { ButtonIcon } from "../../components/ButtonIcon";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../../routes/auth.routes";
+import { RootStackParamList } from "../../routes/app.routes";
 import { Background } from "../../components/Background";
 import { AuthContext, useAuth } from "../../hooks/Auth";
 import { theme } from "../../global/styles/theme";

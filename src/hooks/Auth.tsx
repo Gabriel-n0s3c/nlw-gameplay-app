@@ -9,14 +9,17 @@ import React, {
 import * as AuthSession from "expo-auth-session";
 
 import { api, exchangeCodeForToken } from "../services/api";
-import { CDN_IMAGE, CLIENT_ID, REDIRECT_URI, RESPONSE_TYPE, SCOPE } from "../configs";
-
+const { CDN_IMAGE } = process.env;
+const { CLIENT_ID } = process.env;
+const { REDIRECT_URI } = process.env;
+const { RESPONSE_TYPE } = process.env;
+const { SCOPE } = process.env;
 
 type User = {
   id: string;
   username: string;
   firstName: string;
-  avatar: string;  // avatar pode ser opcional
+  avatar: string; // avatar pode ser opcional
   email: string;
   token: string;
 };
@@ -31,9 +34,9 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-
-
-export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
+export const AuthContext = createContext<AuthContextData>(
+  {} as AuthContextData
+);
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>({} as any);
@@ -69,7 +72,6 @@ function AuthProvider({ children }: AuthProviderProps) {
           const userResponse = await api.get("/users/@me");
           const userData = userResponse.data;
 
-          
           const loggedUser: User = {
             id: userData.id,
             username: userData.username,
@@ -90,7 +92,7 @@ function AuthProvider({ children }: AuthProviderProps) {
           setLoading(false);
         }
       } else if (response?.type && response.type !== "success") {
-        console.warn("Login não concluído:", response.type);
+        setLoading(false);
       }
     }
 
@@ -108,7 +110,6 @@ function AuthProvider({ children }: AuthProviderProps) {
       setLoading(false);
     }
   }
-
 
   return (
     <AuthContext.Provider

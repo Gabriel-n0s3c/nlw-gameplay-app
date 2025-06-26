@@ -42,7 +42,7 @@ export function SignIn() {
             favoritos com seus amigos
           </Text>
           {loading ? (
-            <ActivityIndicator color={theme.colors.primary} />
+            <ActivityIndicator color={theme.colors.primary}/>
           ) : (
             <ButtonIcon title="Entrar com discord" onPress={handleSignIn} />
           )}

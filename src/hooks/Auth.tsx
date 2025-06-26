@@ -7,8 +7,10 @@ import React, {
 } from "react";
 
 import * as AuthSession from "expo-auth-session";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { api, exchangeCodeForToken } from "../services/api";
+import { COLLECTION_USER } from "../configs/database";
 const { CDN_IMAGE } = process.env;
 const { CLIENT_ID } = process.env;
 const { REDIRECT_URI } = process.env;
@@ -81,6 +83,11 @@ function AuthProvider({ children }: AuthProviderProps) {
             token: tokenResponse.access_token,
           };
 
+          await AsyncStorage.setItem(
+            COLLECTION_USER,
+            JSON.stringify(loggedUser)
+          );
+
           setUser(loggedUser);
 
           // // Salva usuário e token no AsyncStorage para persistência
@@ -103,6 +110,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     if (!request) return;
 
     setLoading(true);
+
     try {
       await promptAsync();
     } catch (error) {
@@ -110,6 +118,23 @@ function AuthProvider({ children }: AuthProviderProps) {
       setLoading(false);
     }
   }
+
+  async function loadUserStorageData() {
+    setLoading(true);
+    const storage = await AsyncStorage.getItem(COLLECTION_USER);
+
+    if (storage) {
+      const loggedUser = JSON.parse(storage) as User;
+      api.defaults.headers.authorization = `Bearer ${loggedUser.token}`;
+      setUser(loggedUser);
+    }
+
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    loadUserStorageData();
+  }, []);
 
   return (
     <AuthContext.Provider

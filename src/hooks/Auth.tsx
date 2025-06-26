@@ -16,13 +16,13 @@ type User = {
   id: string;
   username: string;
   firstName: string;
-  avatar?: string;  // avatar pode ser opcional
+  avatar: string;  // avatar pode ser opcional
   email: string;
   token: string;
 };
 
 type AuthContextData = {
-  user: User | null;
+  user: User;
   loading: boolean;
   signIn: () => Promise<void>;
 };
@@ -36,7 +36,7 @@ type AuthProviderProps = {
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>({} as any);
   const [loading, setLoading] = useState(false);
 
   const discovery = {

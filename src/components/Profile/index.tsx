@@ -5,18 +5,20 @@ import {
 } from "react-native";
 import { styles } from "./style";
 import { Avatar } from "../Avatar";
+import { useAuth } from "../../hooks/Auth";
 
 export function Profile() {
+  const {user} = useAuth();
   return (
     <View style={styles.container}>
-        <Avatar urlImage="https://github.com/gabriel-n0s3c.png"/>
+        <Avatar urlImage={user.avatar}/>
       <View>
         <View style={styles.user}>
             <Text  style={styles.greeting}>
                 Olá, 
             </Text>
             <Text  style={styles.username}>
-                Gabriel 
+                {user.firstName} 
             </Text>
         </View>
         <Text style={styles.message}>

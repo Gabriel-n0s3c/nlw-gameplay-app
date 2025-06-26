@@ -9,7 +9,7 @@ import React, {
 import * as AuthSession from "expo-auth-session";
 
 import { api, exchangeCodeForToken } from "../services/api";
-import { CLIENT_ID, REDIRECT_URI, RESPONSE_TYPE, SCOPE } from "../configs";
+import { CDN_IMAGE, CLIENT_ID, REDIRECT_URI, RESPONSE_TYPE, SCOPE } from "../configs";
 
 
 type User = {
@@ -31,12 +31,7 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-type AuthorizationResponse = AuthSession.AuthSessionResult & {
-  params: {
-    code?: string;
-    error?: string;
-  };
-};
+
 
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
@@ -74,13 +69,12 @@ function AuthProvider({ children }: AuthProviderProps) {
           const userResponse = await api.get("/users/@me");
           const userData = userResponse.data;
 
-          console.log(userData);
           
           const loggedUser: User = {
             id: userData.id,
             username: userData.username,
-            firstName: userData.username.split("#")[0],
-            avatar: userData.avatar,
+            firstName: userData.username.split(" ")[0],
+            avatar: `${CDN_IMAGE}/avatars/${userData.id}/${userData.avatar}.png`,
             email: userData.email,
             token: tokenResponse.access_token,
           };

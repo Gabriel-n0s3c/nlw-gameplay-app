@@ -23,7 +23,6 @@ export function AuthRoutes() {
           backgroundColor: theme.colors.secondary100
         }
     }}>
-      <Stack.Screen name="SignIn" component={SignIn} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="AppointmentDetails" component={AppointmentDetails} />
       <Stack.Screen name="AppointmentCreate" component={AppointmentCreate} />

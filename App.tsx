@@ -10,6 +10,7 @@ import { Background } from "./src/components/Background";
 import { Routes } from "./src/routes";
 import * as SplashScreen from "expo-splash-screen";
 import { AuthProvider } from "./src/hooks/Auth";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,7 +33,7 @@ export default function App() {
   }
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <Background>
         <StatusBar
           backgroundColor="transparent"
@@ -43,6 +44,6 @@ export default function App() {
           <Routes />
         </AuthProvider>
       </Background>
-    </View>
+    </GestureHandlerRootView>
   );
 }

@@ -22,9 +22,6 @@ async function exchangeCodeForToken(code: string, codeVerifier: string) {
       },
     });
 
-
-    console.log("\n TOKEN REQUI \n ", response);
-    
     return response.data;
   } catch (error) {
     console.error('Erro ao trocar token:', error.response?.data || error.message);

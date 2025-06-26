@@ -14,12 +14,13 @@ export function SignIn() {
   type SignInScreenProp = StackNavigationProp<RootStackParamList, "Home">;
 
   const navigation = useNavigation<SignInScreenProp>();
-  const {user} = useAuth();
-  console.log(user);
-  
+  const { loading, signIn } = useAuth();
 
-  function handleSignIn() {
-    navigation.navigate("Home");
+  async function handleSignIn() {
+    try {
+      await signIn();
+    } catch (error) {
+    }
   }
 
   return (

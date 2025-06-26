@@ -1,0 +1,10 @@
+import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, RESPONSE_TYPE, SCOPE, CDN_IMAGE } from "./authDiscord";
+
+export {
+    CLIENT_ID,
+    CLIENT_SECRET,
+    REDIRECT_URI,
+    RESPONSE_TYPE,
+    SCOPE,
+    CDN_IMAGE
+}

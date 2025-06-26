@@ -11,17 +11,18 @@ import * as AuthSession from "expo-auth-session";
 import { api, exchangeCodeForToken } from "../services/api";
 import { CLIENT_ID, REDIRECT_URI, RESPONSE_TYPE, SCOPE } from "../configs";
 
+
 type User = {
   id: string;
   username: string;
   firstName: string;
-  avatar: string;
+  avatar?: string;  // avatar pode ser opcional
   email: string;
   token: string;
 };
 
 type AuthContextData = {
-  user: User;
+  user: User | null;
   loading: boolean;
   signIn: () => Promise<void>;
 };
@@ -37,10 +38,10 @@ type AuthorizationResponse = AuthSession.AuthSessionResult & {
   };
 };
 
-export const AuthContext = createContext({} as AuthContextData);
+export const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User>({} as User);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
 
   const discovery = {
@@ -58,50 +59,62 @@ function AuthProvider({ children }: AuthProviderProps) {
     discovery
   );
 
-  async function signIn() {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    async function handleAuthResponse() {
+      if (response?.type === "success" && response.params.code) {
+        setLoading(true);
+        try {
+          const tokenResponse = await exchangeCodeForToken(
+            response.params.code,
+            request?.codeVerifier || ""
+          );
 
-      if (request) {
-        await promptAsync();
-        setTimeout(() => {
+          api.defaults.headers.authorization = `Bearer ${tokenResponse.access_token}`;
 
-          if (response?.type == "success" && response.params.code) {
-            exchangeCodeForToken(
-              response.params.code,
-              request.codeVerifier!
-            ).then((resposta) => {
-              api.defaults.headers.authorization = `Bearer ${resposta.access_token}`;
-              api
-                .get("/users/@me")
-                .then((r) => {
-                })
-                .catch((error) => console.log("\n\n\n ERRO:", error));
-            });
-          }
-        }, 500);
+          const userResponse = await api.get("/users/@me");
+          const userData = userResponse.data;
+
+          console.log(userData);
+          
+          const loggedUser: User = {
+            id: userData.id,
+            username: userData.username,
+            firstName: userData.username.split("#")[0],
+            avatar: userData.avatar,
+            email: userData.email,
+            token: tokenResponse.access_token,
+          };
+
+          setUser(loggedUser);
+
+          // // Salva usuário e token no AsyncStorage para persistência
+          // await AsyncStorage.setItem("@app:user", JSON.stringify(loggedUser));
+          // await AsyncStorage.setItem("@app:token", tokenResponse.access_token);
+        } catch (error) {
+          console.error("Erro ao autenticar:", error);
+        } finally {
+          setLoading(false);
+        }
+      } else if (response?.type && response.type !== "success") {
+        console.warn("Login não concluído:", response.type);
       }
+    }
 
-      // setUser(userData);
-    } catch {
-      throw new Error("Não foi possivel auntenticar.");
-    } finally {
+    handleAuthResponse();
+  }, [response]);
+
+  async function signIn() {
+    if (!request) return;
+
+    setLoading(true);
+    try {
+      await promptAsync();
+    } catch (error) {
+      console.error("Erro no promptAsync:", error);
       setLoading(false);
     }
   }
 
-  async function loadUserStorageData() {
-    // const storage = await AsyncStorage.getItem(COLLECTION_USERS);
-    // if (storage) {
-    //   const userLogged = JSON.parse(storage) as User;
-    //   api.defaults.headers.authorization = `Bearer ${userLogged.token}`;
-    //   setUser(userLogged);
-    // }
-  }
-
-  useEffect(() => {
-    loadUserStorageData();
-  }, []);
 
   return (
     <AuthContext.Provider
@@ -117,9 +130,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 }
 
 function useAuth() {
-  const context = useContext(AuthContext);
-
-  return context;
+  return useContext(AuthContext);
 }
 
 export { AuthProvider, useAuth };

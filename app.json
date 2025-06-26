@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "nlw_gameplay",
-    "slug": "nlw_gameplay",
+    "name": "nlwgameplay",
+    "slug": "nlwgameplay",
+    "scheme": "nlwgameplay",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,13 +22,14 @@
         "backgroundColor": "#0E1647"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.n0s3c.nlw_gameplay"
+      "package": "com.n0s3c.nlwgameplay"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ],
     "extra": {
       "eas": {
